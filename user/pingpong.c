@@ -25,5 +25,5 @@ main(int argc, char *argv[])
         int pid = getpid();
         printf("%d: received pong\n", pid);
     }
-    return 0;
+    exit(0);
 }
