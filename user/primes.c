@@ -6,7 +6,7 @@ int
 main(int argc, char *argv[])
 {
     int prime; // 接收到的第一个数必是质数
-    int num[1]; // 缓冲区
+    int num; // 缓冲区
     int p1[2]; // 和左侧的管道
     int p2[2]; // 和右侧的管道
     pipe(p1);
@@ -26,17 +26,17 @@ main(int argc, char *argv[])
         pipe(p2);
 
         // 最后一个进程读不到数据，不创建子进程
-        if(read(p1[0], num, sizeof(num))){
-            prime = num[0];
+        if(read(p1[0], &num, sizeof(num))){
+            prime = num;
             printf("prime %d\n", prime);
         } else {
             exit(0);
         }
     }
 
-    while(read(p1[0], num, sizeof(num))){
-        if (num[0] % prime != 0){
-            write(p2[1], num, sizeof(num));
+    while(read(p1[0], &num, sizeof(num))){
+        if (num % prime != 0){
+            write(p2[1], &num, sizeof(num));
         }    
     }
     

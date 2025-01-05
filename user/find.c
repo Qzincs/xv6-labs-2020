@@ -75,11 +75,11 @@ int
 main(int argc, char *argv[])
 {
   // 默认在当前目录找
-  if (argc < 3) {
+  if (argc == 2) {
     find(".", argv[1]);
   }
   // 在指定目录找
-  else if(argc < 4) {
+  else if(argc == 3) {
     find(argv[1], argv[2]);
   } else {
     fprintf(2, "Usage: find path filename\n");
