@@ -114,6 +114,7 @@ exec(char *path, char **argv)
   p->sz = sz;
   p->trapframe->epc = elf.entry;  // initial program counter = main
   p->trapframe->sp = sp; // initial stack pointer
+  ukvmcopy(p->pagetable, p->kpagetable, 0, p->sz);
   proc_freepagetable(oldpagetable, oldsz);
 
   if(p->pid == 1) {
