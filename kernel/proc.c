@@ -497,7 +497,7 @@ scheduler(void)
         p->state = RUNNING;
         c->proc = p;
         w_satp(MAKE_SATP(p->kpagetable));
-        // sfence_vma(); 
+        sfence_vma(); 
         swtch(&c->context, &p->context);
 
         // Process is done running for now.
