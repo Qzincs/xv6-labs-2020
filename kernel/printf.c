@@ -132,3 +132,22 @@ printfinit(void)
   initlock(&pr.lock, "pr");
   pr.locking = 1;
 }
+
+void
+backtrace(void)
+{
+  uint64 fp, ra = 0;
+  fp = r_fp();
+
+  uint64 kstackbottom;
+  kstackbottom = PGROUNDUP(fp);
+
+  printf("backtrace:\n");
+
+  while(fp < kstackbottom )
+  {
+    asm volatile("ld %0, -8(%1)" : "=r" (ra) : "r"(fp));
+    printf("%p\n", ra);
+    asm volatile("ld %0, -16(%1)" : "=r" (fp) : "r"(fp));
+  }
+}
