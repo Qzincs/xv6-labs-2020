@@ -106,4 +106,6 @@ struct proc {
   int interval;                // alarm interval (ticks)
   int ticks;                   // ticks after last handler call
   void (*handler)();           // alarm handler
+  int is_handling;
+  struct trapframe *alarmframe;
 };
