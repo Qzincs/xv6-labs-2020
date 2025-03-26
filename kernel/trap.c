@@ -70,16 +70,21 @@ usertrap(void)
   } else if (r_scause() == 13 || r_scause() == 15) {
     // page fault
     uint64 va = r_stval();
-    char* mem = kalloc();
-    if(mem != 0) {
-      memset((void*) mem, 0, PGSIZE);
-      if(mappages(p->pagetable, PGROUNDDOWN(va), PGSIZE, (uint64)mem, PTE_W|PTE_X|PTE_R|PTE_U) != 0) {
-        kfree(mem);
-        p->killed = 1;
-      }
+    if(va < PGROUNDDOWN(p->trapframe->sp) || va >= p->sz) {
+      p->killed = 1;
     }
     else {
-      p->killed = 1;
+      char* mem = kalloc();
+      if(mem != 0) {
+        memset((void*) mem, 0, PGSIZE);
+        if(mappages(p->pagetable, PGROUNDDOWN(va), PGSIZE, (uint64)mem, PTE_W|PTE_X|PTE_R|PTE_U) != 0) {
+          kfree(mem);
+          p->killed = 1;
+        }
+      }
+      else {
+        p->killed = 1;
+      }
     }
   } else {
     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
